@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE `Match` ADD COLUMN `isComplete` BOOLEAN NOT NULL DEFAULT false,
+    MODIFY `homeScore` INTEGER NOT NULL DEFAULT 0,
+    MODIFY `awayScore` INTEGER NOT NULL DEFAULT 0;
