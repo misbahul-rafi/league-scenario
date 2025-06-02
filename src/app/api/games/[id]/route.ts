@@ -1,15 +1,14 @@
 import slugify from "@/app/utils/slugify"
+import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server"
 
-interface Props {
-  params: {
-    id: string;
-  };
-}
-
-export async function GET({ params }: Props) {
+export async function GET(
+  req: Request,
+  context: any
+) {
   try {
-    const { id } = await params;
+    const { params } = context;
+    const id = params.id
     const idNumber = parseInt(id)
 
     if (!idNumber) {
@@ -26,9 +25,13 @@ export async function GET({ params }: Props) {
     return NextResponse.json({ message: "internal server error" }, { status: 500 })
   }
 }
-export async function PUT(req: NextRequest, { params }: Props) {
+export async function PUT(
+  req: NextRequest,
+  context: any
+) {
   try {
-    const { id } = await params;
+    const {params} = context
+    const id = params.id;
     const idNumber = parseInt(id)
     const { name } = await req.json();
 
@@ -55,9 +58,12 @@ export async function PUT(req: NextRequest, { params }: Props) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: Props) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
   try {
-    const { id } = await params;
+    const id = (await params).id
     const idNumber = parseInt(id)
     if (!idNumber) {
       return NextResponse.json({ message: "game not found" }, { status: 404 })
@@ -67,11 +73,10 @@ export async function DELETE(req: NextRequest, { params }: Props) {
     })
     return NextResponse.json({ message: "game deleted" }, { status: 200 })
   } catch (error: any) {
-    if(error?.code === 'P2003'){
+    if (error?.code === 'P2003') {
       return NextResponse.json({ message: "clear all league with this game first" }, { status: 406 })
     }
     console.log(`⛔⛔⛔ Server Error ⛔⛔⛔\n${error?.code}`)
     return NextResponse.json({ message: "internal server error" }, { status: 500 })
-
   }
 }

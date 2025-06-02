@@ -6,9 +6,9 @@ interface Props {
     id: string;
   };
 }
-export async function GET(req: NextRequest, { params }: Props) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = await params;
+    const id = (await params).id;
     if (!parseInt(id)) {
       return NextResponse.json({ message: "bad request" }, { status: 400 })
     }
@@ -24,9 +24,9 @@ export async function GET(req: NextRequest, { params }: Props) {
     return NextResponse.json({ message: "internal server error" }, { status: 500 })
   }
 }
-export async function PATCH(req: NextRequest, { params }: Props) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = await params;
+    const id = (await params).id;
     const idNumber = parseInt(id)
     const { name, code } = await req.json()
     if (!idNumber || !name || !code) {
@@ -48,9 +48,9 @@ export async function PATCH(req: NextRequest, { params }: Props) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: Props) {
-  const { id } = await params;
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const id = (await params).id;
     if (!parseInt(id)) {
       return NextResponse.json({ message: 'bad request' }, { status: 409 })
     }

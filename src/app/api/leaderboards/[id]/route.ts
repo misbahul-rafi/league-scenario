@@ -1,14 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 
-interface Props {
-  params: {
-    id: string
-  }
-}
-
-export async function DELETE(req: NextRequest, { params }: Props) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = await params
+    const id = (await params).id
     const idNumber = parseInt(id)
     if (isNaN(idNumber)) {
       return NextResponse.json({ message: "bad request" }, { status: 400 })

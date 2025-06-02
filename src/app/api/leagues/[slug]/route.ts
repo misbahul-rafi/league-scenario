@@ -2,15 +2,9 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-interface Props {
-  params: {
-    slug: string;
-  };
-}
-
-export async function GET(req: NextRequest, { params }: Props) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    const { slug } = await params;
+    const slug = (await params).slug;
     const league = await prisma.league.findUnique({
       where: { slug: slug },
       include: {
@@ -35,9 +29,9 @@ export async function GET(req: NextRequest, { params }: Props) {
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: Props) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
-    const { slug } = await params;
+    const slug = (await params).slug;
     const league = await prisma.league.findUnique({
       where: { slug },
       include: {

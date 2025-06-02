@@ -7,9 +7,9 @@ interface Props {
   };
 }
 
-export async function GET(req: NextRequest, { params }: Props) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = await params;
+    const id = (await params).id;
     const idNumber = parseInt(id)
     if (isNaN(idNumber)) {
       return NextResponse.json({ error: 'bad request' }, { status: 400 });
@@ -20,8 +20,8 @@ export async function GET(req: NextRequest, { params }: Props) {
     return NextResponse.json({ message: "internal server error" }, { status: 500 })
   }
 }
-export async function PATCH(req: NextRequest, { params }: Props) {
-  const { id } = await params;
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+    const id = (await params).id;
   const idNumber = parseInt(id)
   if (isNaN(idNumber)) {
     return NextResponse.json({ error: 'bad request' }, { status: 400 });
@@ -29,9 +29,9 @@ export async function PATCH(req: NextRequest, { params }: Props) {
   return NextResponse.json({message: "match updated"}, {status: 201})
 }
 
-export async function DELETE(req: NextRequest, { params }: Props) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = await params;
+    const id = (await params).id;
     const idNumber = parseInt(id)
     if (isNaN(idNumber)) {
       return NextResponse.json({ error: 'bad request' }, { status: 400 });

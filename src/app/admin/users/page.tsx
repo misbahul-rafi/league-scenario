@@ -1,3 +1,6 @@
+import { prisma } from "@/lib/prisma";
+
+
 export default async function UserManagement() {
   const users = await prisma.user.findMany();
 
